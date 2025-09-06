@@ -212,7 +212,7 @@ const generateMockServers = (): ServerDetail[] => {
     const updatedDate = new Date(createdDate.getTime() + Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000)
 
     return {
-      id: serverId,
+      id23: serverId,
       name: `io.modelcontextprotocol/${name}${index > serverNames.length ? `-${Math.floor(index / serverNames.length)}` : ""}`,
       description: `${description} - ${name} integration for MCP.`,
       status: status as "active" | "deprecated" | "beta",
