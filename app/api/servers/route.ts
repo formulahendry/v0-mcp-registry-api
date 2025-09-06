@@ -6,10 +6,11 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
     const cursor = searchParams.get("cursor") || undefined
-    const limit = Number.parseInt(searchParams.get("limit") || "10")
+    const limitParam = searchParams.get("limit")
+    const limit = limitParam ? Number.parseInt(limitParam, 10) : undefined // undefined -> service default (30)
     const page = searchParams.get("page") ? Number.parseInt(searchParams.get("page")) : undefined
 
-    if (limit > 100) {
+    if (typeof limit === "number" && limit > 100) {
       return NextResponse.json({ error: "Limit cannot exceed 100" }, { status: 400 })
     }
 
