@@ -2,20 +2,8 @@ import { v4 as uuidv4 } from "uuid"
 import type { ServerDetail, ServerList } from "../types"
 
 const generateMockServers = (): ServerDetail[] => {
-  const categories = [
-    "productivity",
-    "development",
-    "data",
-    "ai",
-    "communication",
-    "finance",
-    "media",
-    "security",
-    "education",
-    "health",
-  ]
   const registryTypes = ["npm", "pypi", "docker", "github"]
-  const statuses = ["active", "deprecated", "beta"]
+  const statuses = ["active", "deprecated"]
 
   const serverNames = [
     "filesystem",
@@ -199,7 +187,6 @@ const generateMockServers = (): ServerDetail[] => {
 
   return Array.from({ length: 150 }, (_, index) => {
     const name = serverNames[index % serverNames.length]
-    const category = categories[Math.floor(Math.random() * categories.length)]
     const status = statuses[Math.floor(Math.random() * statuses.length)]
     const registryType = registryTypes[Math.floor(Math.random() * registryTypes.length)]
     const description = descriptions[Math.floor(Math.random() * descriptions.length)]
@@ -212,20 +199,15 @@ const generateMockServers = (): ServerDetail[] => {
     const updatedDate = new Date(createdDate.getTime() + Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000)
 
     return {
-      id: serverId,
       name: `io.modelcontextprotocol/${name}${index > serverNames.length ? `-${Math.floor(index / serverNames.length)}` : ""}`,
       description: `${description} - ${name} integration for MCP.`,
-      status: status as "active" | "deprecated" | "beta",
+      status: status as "active" | "deprecated",
       repository: {
         url: `https://github.com/modelcontextprotocol/${name}-server`,
         source: "github" as const,
         id: uuidv4(),
       },
-      version_detail: {
-        version,
-        release_date: updatedDate.toISOString(),
-        is_latest: true,
-      },
+      version,
       packages: [
         {
           registry_type: registryType as "npm" | "pypi" | "docker" | "github",
@@ -251,16 +233,19 @@ const generateMockServers = (): ServerDetail[] => {
       created_at: createdDate.toISOString(),
       updated_at: updatedDate.toISOString(),
       _meta: {
-        publisher: {
+        "io.modelcontextprotocol.registry/publisher-provided": {
           tool: "publisher-cli",
           version: "1.2.3",
+          build_info: {
+            commit: "abc123def456",
+            timestamp: updatedDate.toISOString(),
+          }
         },
-        "io.modelcontextprotocol.registry": {
+        "io.modelcontextprotocol.registry/official": {
           id: serverId,
           published_at: createdDate.toISOString(),
           updated_at: updatedDate.toISOString(),
           is_latest: true,
-          release_date: updatedDate.toISOString(),
         },
       },
     }
@@ -287,23 +272,23 @@ export class ServerService {
 
     const nextCursor = endIndex < servers.length ? Buffer.from(endIndex.toString()).toString("base64") : undefined
 
+    const metadata: { next_cursor?: string; count: number } = {
+      count: paginatedServers.length,
+    }
+    
+    if (nextCursor) {
+      metadata.next_cursor = nextCursor
+    }
+
     return {
       servers: paginatedServers,
-      metadata: {
-        next_cursor: nextCursor,
-        count: paginatedServers.length,
-        total: servers.length,
-        page: page || Math.floor(startIndex / limit) + 1,
-        total_pages: Math.ceil(servers.length / limit),
-        has_next: endIndex < servers.length,
-        has_previous: startIndex > 0,
-      },
+      metadata,
     }
   }
 
   static async getServerById(nameOrId: string, version?: string): Promise<ServerDetail | null> {
     const server = servers.find(
-      (s) => s.name === nameOrId || s._meta?.["io.modelcontextprotocol.registry"]?.id === nameOrId,
+      (s) => s.name === nameOrId || s._meta?.["io.modelcontextprotocol.registry/official"]?.id === nameOrId,
     )
 
     if (!server) {
@@ -311,14 +296,14 @@ export class ServerService {
     }
 
     // If version is specified, filter by version
-    if (version && server.version_detail.version !== version) {
+    if (version && server.version !== version) {
       return null
     }
 
     return server
   }
 
-  static async publishServer(serverData: ServerDetail, userId: string): Promise<ServerDetail> {
+  static async publishServer(serverData: ServerDetail): Promise<ServerDetail> {
     const now = new Date().toISOString()
     const serverId = uuidv4()
 
@@ -328,12 +313,11 @@ export class ServerService {
       updated_at: now,
       _meta: {
         ...serverData._meta,
-        "io.modelcontextprotocol.registry": {
+        "io.modelcontextprotocol.registry/official": {
           id: serverId,
           published_at: now,
           updated_at: now,
           is_latest: true,
-          release_date: serverData.version_detail.release_date,
         },
       },
     }
@@ -353,7 +337,7 @@ export class ServerService {
   }
 
   static async deleteServer(id: string): Promise<boolean> {
-    const index = servers.findIndex((s) => s._meta?.["io.modelcontextprotocol.registry"]?.id === id)
+    const index = servers.findIndex((s) => s._meta?.["io.modelcontextprotocol.registry/official"]?.id === id)
 
     if (index === -1) {
       return false

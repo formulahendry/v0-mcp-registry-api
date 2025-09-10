@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const publishedServer = await ServerService.publishServer(value, user.id)
+    const publishedServer = await ServerService.publishServer(value)
     return NextResponse.json(publishedServer, { status: 201 })
   } catch (error) {
     console.error("Error publishing server:", error)

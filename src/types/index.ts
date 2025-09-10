@@ -5,11 +5,7 @@ export interface Repository {
   subfolder?: string
 }
 
-export interface VersionDetail {
-  version: string
-  release_date: string
-  is_latest: boolean
-}
+// Removed VersionDetail interface as it's not in the OpenAPI spec
 
 export interface Input {
   description?: string
@@ -66,7 +62,7 @@ export interface Server {
   description: string
   status?: "active" | "deprecated"
   repository?: Repository
-  version_detail: VersionDetail
+  version: string
   created_at?: string
   updated_at?: string
 }
@@ -76,13 +72,12 @@ export interface ServerDetail extends Server {
   packages?: Package[]
   remotes?: Remote[]
   _meta?: {
-    publisher?: Record<string, any>
-    "io.modelcontextprotocol.registry"?: {
+    "io.modelcontextprotocol.registry/publisher-provided"?: Record<string, any>
+    "io.modelcontextprotocol.registry/official"?: {
       id: string
       published_at: string
       updated_at: string
       is_latest: boolean
-      release_date: string
     }
     [key: string]: any
   }
@@ -93,11 +88,6 @@ export interface ServerList {
   metadata?: {
     next_cursor?: string
     count?: number
-    total?: number
-    page?: number
-    total_pages?: number
-    has_next?: boolean
-    has_previous?: boolean
   }
 }
 
