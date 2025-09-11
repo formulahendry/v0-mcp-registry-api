@@ -69,6 +69,7 @@ This implementation is fully compliant with the [MCP Server Registry OpenAPI spe
   - `io.modelcontextprotocol.registry/official`
 - **Simplified pagination**: Removed page-based pagination, cursor-only
 - **Status enum**: Only `active` and `deprecated` (removed `beta`)
+- **Deterministic server IDs**: Server IDs are now generated deterministically from server names using UUIDv5, ensuring consistency across application restarts
 
 ### Specification Highlights:
 - **Cursor pagination**: `?cursor=base64_encoded_position&limit=30`
@@ -88,6 +89,11 @@ curl http://localhost:3000/v0/servers?limit=10
 Get Server Details
 ```bash
 curl http://localhost:3000/v0/servers/550e8400-e29b-41d4-a716-446655440000?version=1.0.2
+```
+
+Get Deterministic Server ID
+```bash
+curl "http://localhost:3000/v0/servers/id-lookup?name=io.modelcontextprotocol/filesystem"
 ```
 
 Publish Server

@@ -1,5 +1,24 @@
-import { v4 as uuidv4 } from "uuid"
+import { v5 as uuidv5 } from "uuid"
 import type { ServerDetail, ServerList } from "../types"
+
+// Namespace UUID for generating deterministic server IDs
+const MCP_REGISTRY_NAMESPACE = "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+
+/**
+ * Generate deterministic UUID based on server name
+ * This ensures the same server name always generates the same UUID across application restarts
+ */
+const generateServerIdFromName = (serverName: string): string => {
+  return uuidv5(serverName, MCP_REGISTRY_NAMESPACE)
+}
+
+/**
+ * Get the deterministic server ID for a given server name
+ * This can be used by external clients to predict server IDs
+ */
+export const getServerIdForName = (serverName: string): string => {
+  return generateServerIdFromName(serverName)
+}
 
 const generateMockServers = (): ServerDetail[] => {
   const registryTypes = ["npm", "pypi", "docker", "github"]
@@ -191,7 +210,12 @@ const generateMockServers = (): ServerDetail[] => {
     const registryType = registryTypes[Math.floor(Math.random() * registryTypes.length)]
     const description = descriptions[Math.floor(Math.random() * descriptions.length)]
     const version = `${Math.floor(Math.random() * 5) + 1}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 20)}`
-    const serverId = uuidv4()
+    
+    // Create full server name
+    const fullServerName = `io.modelcontextprotocol/${name}${index > serverNames.length ? `-${Math.floor(index / serverNames.length)}` : ""}`
+    
+    // Generate deterministic server ID based on the full server name
+    const serverId = generateServerIdFromName(fullServerName)
 
     const baseDate = new Date("2023-01-01")
     const randomDays = Math.floor(Math.random() * 365)
@@ -199,13 +223,13 @@ const generateMockServers = (): ServerDetail[] => {
     const updatedDate = new Date(createdDate.getTime() + Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000)
 
     return {
-      name: `io.modelcontextprotocol/${name}${index > serverNames.length ? `-${Math.floor(index / serverNames.length)}` : ""}`,
+      name: fullServerName,
       description: `${description} - ${name} integration for MCP.`,
       status: status as "active" | "deprecated",
       repository: {
         url: `https://github.com/modelcontextprotocol/${name}-server`,
         source: "github" as const,
-        id: uuidv4(),
+        id: generateServerIdFromName(`repo-${name}`), // Deterministic repository ID
       },
       version,
       packages: [
@@ -305,7 +329,9 @@ export class ServerService {
 
   static async publishServer(serverData: ServerDetail): Promise<ServerDetail> {
     const now = new Date().toISOString()
-    const serverId = uuidv4()
+    
+    // Generate deterministic server ID based on the server name
+    const serverId = generateServerIdFromName(serverData.name)
 
     const newServer: ServerDetail = {
       ...serverData,
