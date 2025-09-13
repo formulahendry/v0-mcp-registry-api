@@ -140,7 +140,7 @@
                     "transport": {
                         "type": "stdio"
                     },
-                    "runtime_arguments": [
+                    "package_arguments": [
                         {
                             "type": "positional",
                             "value": "server"
