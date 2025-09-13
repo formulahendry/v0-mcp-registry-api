@@ -1,0 +1,165 @@
+{
+    "servers": [
+        {
+            "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+            "name": "Code Runner",
+            "description": "Code Runner MCP Server for running code snippets and showing results. Supports multiple programming languages including JavaScript, Python, PHP, Ruby, Go, and many more.",
+            "status": "active",
+            "repository": {
+                "url": "https://github.com/formulahendry/mcp-server-code-runner",
+                "source": "github"
+            },
+            "version": "0.1.8",
+            "packages": [
+                {
+                    "registry_type": "npm",
+                    "registry_base_url": "https://registry.npmjs.org",
+                    "identifier": "mcp-server-code-runner",
+                    "version": "0.1.8",
+                    "transport": {
+                        "type": "stdio"
+                    }
+                }
+            ],
+            "remotes": [
+                {
+                    "type": "streamable-http",
+                    "url": "https://code-runner-mcp.azurewebsites.net/mcp"
+                }
+            ],
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                    "published_at": "2025-09-13T00:00:00.000Z",
+                    "updated_at": "2025-09-13T00:00:00.000Z",
+                    "is_latest": true
+                }
+            }
+        },
+        {
+            "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+            "name": "Gmail",
+            "description": "Read emails, send messages, and manage labels in your Gmail account.",
+            "status": "active",
+            "repository": {
+                "url": "https://github.com/waystation-ai/mcp",
+                "source": "github"
+            },
+            "version": "0.3.1",
+            "remotes": [
+                {
+                    "type": "streamable-http",
+                    "url": "https://waystation.ai/gmail/mcp"
+                },
+                {
+                    "type": "sse",
+                    "url": "https://waystation.ai/gmail/mcp/sse"
+                }
+            ],
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "id": "00b9d4aa-56ab-4f32-9f9f-3b9d48ed023f",
+                    "published_at": "2025-09-09T14:46:07.969809594Z",
+                    "updated_at": "2025-09-09T14:46:07.969809594Z",
+                    "is_latest": true
+                }
+            }
+        },
+        {
+            "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+            "name": "Microsoft Learn",
+            "description": "Microsoft Learn MCP Server provides access to Microsoft's official documentation and technical resources. Search and retrieve content from Microsoft Learn using semantic search and fetch full documentation pages in markdown format.",
+            "status": "active",
+            "repository": {
+                "url": "https://github.com/MicrosoftDocs/mcp",
+                "source": "github"
+            },
+            "version": "1.0.0",
+            "remotes": [
+                {
+                    "type": "streamable-http",
+                    "url": "https://learn.microsoft.com/api/mcp"
+                }
+            ],
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                    "published_at": "2025-09-13T00:00:00.000Z",
+                    "updated_at": "2025-09-13T00:00:00.000Z",
+                    "is_latest": true
+                }
+            }
+        },
+        {
+            "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+            "name": "Playwright",
+            "description": "Playwright MCP Server provides browser automation capabilities using Playwright. Enables LLMs to interact with web pages through structured accessibility snapshots, bypassing the need for screenshots or visually-tuned models. Fast, lightweight, and deterministic tool application.",
+            "status": "active",
+            "repository": {
+                "url": "https://github.com/microsoft/playwright-mcp",
+                "source": "github"
+            },
+            "version": "0.0.37",
+            "packages": [
+                {
+                    "registry_type": "npm",
+                    "registry_base_url": "https://registry.npmjs.org",
+                    "identifier": "@playwright/mcp",
+                    "version": "0.0.37",
+                    "transport": {
+                        "type": "stdio"
+                    }
+                }
+            ],
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "id": "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+                    "published_at": "2025-09-13T00:00:00.000Z",
+                    "updated_at": "2025-09-13T00:00:00.000Z",
+                    "is_latest": true
+                }
+            }
+        },
+        {
+            "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+            "name": "Azure MCP Server",
+            "description": "Azure MCP Server implements the MCP specification to create a seamless connection between AI agents and Azure services. Provides comprehensive Azure service management including storage, databases, AI services, monitoring, and more. Supercharges your agents with Azure context.",
+            "status": "active",
+            "repository": {
+                "url": "https://github.com/microsoft/mcp",
+                "source": "github",
+                "subfolder": "servers/Azure.Mcp.Server"
+            },
+            "version": "0.6.0",
+            "packages": [
+                {
+                    "registry_type": "npm",
+                    "registry_base_url": "https://registry.npmjs.org",
+                    "identifier": "@azure/mcp",
+                    "version": "0.6.0",
+                    "transport": {
+                        "type": "stdio"
+                    },
+                    "runtime_arguments": [
+                        {
+                            "type": "positional",
+                            "value": "server"
+                        },
+                        {
+                            "type": "positional", 
+                            "value": "start"
+                        }
+                    ]
+                }
+            ],
+            "_meta": {
+                "io.modelcontextprotocol.registry/official": {
+                    "id": "c3d4e5f6-g7h8-9012-cdef-345678901234",
+                    "published_at": "2025-09-13T00:00:00.000Z",
+                    "updated_at": "2025-09-13T00:00:00.000Z",
+                    "is_latest": true
+                }
+            }
+        }
+    ]
+}
