@@ -295,6 +295,12 @@ const generateMockServers = (): ServerDetail[] => {
         id: generateServerIdFromName(`repo-${name}`), // Deterministic repository ID
       },
       version,
+      // backward compatibility
+      version_detail: {
+        version: "Original",
+        release_date: "2025-07-12T00:36:09.301998Z",
+        is_latest: true
+      },
       packages,
       created_at: createdDate.toISOString(),
       updated_at: updatedDate.toISOString(),
