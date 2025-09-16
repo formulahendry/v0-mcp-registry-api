@@ -222,7 +222,70 @@ const generateMockServers = (): ServerDetail[] => {
     const createdDate = new Date(baseDate.getTime() + randomDays * 24 * 60 * 60 * 1000)
     const updatedDate = new Date(createdDate.getTime() + Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000)
 
-    return {
+    // Determine distribution pattern based on index
+    const isEvenIndex = index % 2 === 0
+    
+    // Generate packages array based on index pattern
+    const packages = isEvenIndex 
+      ? [
+          // Primary npm package
+          {
+            registry_type: "npm" as const,
+            registry_base_url: "https://registry.npmjs.org",
+            identifier: `@modelcontextprotocol/server-${name}`,
+            version,
+            transport: { type: "stdio" as const },
+          },
+          // Secondary Python package
+          {
+            registry_type: "pypi" as const,
+            registry_base_url: "https://pypi.org",
+            identifier: `mcp-server-${name}`,
+            version,
+            transport: { type: "stdio" as const },
+          },
+        ]
+      : [
+          // Single package for odd indices
+          {
+            registry_type: registryType as "npm" | "pypi" | "docker" | "github",
+            registry_base_url:
+              registryType === "npm"
+                ? "https://registry.npmjs.org"
+                : registryType === "pypi"
+                  ? "https://pypi.org"
+                  : registryType === "docker"
+                    ? "https://hub.docker.com"
+                    : "https://github.com",
+            identifier:
+              registryType === "npm"
+                ? `@modelcontextprotocol/server-${name}`
+                : registryType === "pypi"
+                  ? `mcp-server-${name}`
+                  : registryType === "docker"
+                    ? `modelcontextprotocol/${name}-server`
+                    : `modelcontextprotocol/${name}-server`,
+            version,
+            transport: { type: "stdio" as const },
+          },
+        ]
+
+    // Generate remotes array based on index pattern
+    const remotes = isEvenIndex 
+      ? [
+          // Multiple remotes for even indices
+          {
+            type: "streamable-http" as const,
+            url: `https://api.${name}.example.com/mcp`,
+          },
+          {
+            type: "sse" as const,
+            url: `https://api.${name}.example.com/mcp/sse`,
+          },
+        ]
+      : undefined
+
+    const serverData: any = {
       name: fullServerName,
       description: `${description} - ${name} integration for MCP.`,
       status: status as "active" | "deprecated",
@@ -232,28 +295,7 @@ const generateMockServers = (): ServerDetail[] => {
         id: generateServerIdFromName(`repo-${name}`), // Deterministic repository ID
       },
       version,
-      packages: [
-        {
-          registry_type: registryType as "npm" | "pypi" | "docker" | "github",
-          registry_base_url:
-            registryType === "npm"
-              ? "https://registry.npmjs.org"
-              : registryType === "pypi"
-                ? "https://pypi.org"
-                : registryType === "docker"
-                  ? "https://hub.docker.com"
-                  : "https://github.com",
-          identifier:
-            registryType === "npm"
-              ? `@modelcontextprotocol/server-${name}`
-              : registryType === "pypi"
-                ? `mcp-server-${name}`
-                : registryType === "docker"
-                  ? `modelcontextprotocol/${name}-server`
-                  : `modelcontextprotocol/${name}-server`,
-          version,
-        },
-      ],
+      packages,
       created_at: createdDate.toISOString(),
       updated_at: updatedDate.toISOString(),
       _meta: {
@@ -273,6 +315,13 @@ const generateMockServers = (): ServerDetail[] => {
         },
       },
     }
+
+    // Add remotes only if they exist
+    if (remotes) {
+      serverData.remotes = remotes
+    }
+
+    return serverData
   })
 }
 
