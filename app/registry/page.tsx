@@ -89,6 +89,7 @@ export default function RegistryBrowser() {
   }
 
   const [baseUrl, setBaseUrl] = useState(getDefaultBaseUrl())
+  const [selectedPreset, setSelectedPreset] = useState(getDefaultBaseUrl())
   const [customUrl, setCustomUrl] = useState("")
   const [searchKeyword, setSearchKeyword] = useState("")
   const [latestOnly, setLatestOnly] = useState(true)
@@ -209,6 +210,7 @@ export default function RegistryBrowser() {
   const applyCustomUrl = () => {
     if (customUrl.trim()) {
       setBaseUrl(customUrl.trim())
+      setSelectedPreset("") // Clear preset selection when custom URL is applied
     }
   }
 
@@ -240,9 +242,49 @@ export default function RegistryBrowser() {
           <CardDescription>Configure the registry API endpoint</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="preset-urls" className="mb-2 block">Quick Select Registry</Label>
+            <select
+              id="preset-urls"
+              className="w-full h-10 px-3 py-2 text-sm rounded-md border border-input bg-background ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onChange={(e) => {
+                const value = e.target.value
+                if (value) {
+                  setBaseUrl(value)
+                  setSelectedPreset(value)
+                  setCustomUrl("")
+                }
+              }}
+              value={selectedPreset}
+            >
+              <option value="">Select a registry...</option>
+              <option value="https://v0-node-js-api-from-open-api.vercel.app/v0.1">
+                Testing Registry (v0-node-js-api-from-open-api.vercel.app)
+              </option>
+              <option value="https://api.mcp.github.com/v0.1">
+                GitHub MCP Registry (api.mcp.github.com)
+              </option>
+              <option value="http://registry.modelcontextprotocol.io/v0.1">
+                OSS MCP Registry (registry.modelcontextprotocol.io)
+              </option>
+              <option value={getDefaultBaseUrl()}>
+                Local Registry (Current Host)
+              </option>
+            </select>
+          </div>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">Or enter custom URL</span>
+            </div>
+          </div>
+
           <div className="flex gap-2">
             <div className="flex-1">
-              <Label htmlFor="custom-url">Registry Base URL</Label>
+              <Label htmlFor="custom-url">Custom Registry URL</Label>
               <Input
                 id="custom-url"
                 placeholder="Enter custom registry URL (e.g., https://example.com/v0.1)"
@@ -252,7 +294,7 @@ export default function RegistryBrowser() {
               />
             </div>
             <div className="flex items-end">
-              <Button onClick={applyCustomUrl}>Apply</Button>
+              <Button onClick={applyCustomUrl} disabled={!customUrl.trim()}>Apply</Button>
             </div>
           </div>
           <div className="text-sm text-muted-foreground">
