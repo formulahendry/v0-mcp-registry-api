@@ -3,10 +3,11 @@
     "target": "ES2020",
     "module": "commonjs",
     "lib": [
-      "ES2020"
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
     ],
     "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -32,10 +33,17 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "src/**/*",
+    "app/**/*",
+    "components/**/*",
+    "lib/**/*",
     ".next/types/**/*.ts"
   ],
   "exclude": [

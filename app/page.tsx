@@ -15,7 +15,7 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div className="bg-blue-50 rounded-xl p-6">
-              <h3 className="text-xl font-semibold text-blue-900 mb-3">Browse Servers</h3>
+              <h3 className="text-xl font-semibold text-blue-900 mb-3">Browse Servers (v0)</h3>
               <p className="text-blue-700 mb-4">
                 Explore 150+ available MCP servers with detailed information about packages, versions, and
                 implementations via our OpenAPI-compliant v0 API.
@@ -28,8 +28,21 @@ export default function Home() {
               </Link>
             </div>
 
+            <div className="bg-purple-50 rounded-xl p-6">
+              <h3 className="text-xl font-semibold text-purple-900 mb-3">Registry Browser (v0.1)</h3>
+              <p className="text-purple-700 mb-4">
+                Interactive UI to browse, search, and explore MCP servers with advanced filtering, version support, and detailed views.
+              </p>
+              <Link
+                href="/registry"
+                className="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                Open Browser
+              </Link>
+            </div>
+
             <div className="bg-green-50 rounded-xl p-6">
-              <h3 className="text-xl font-semibold text-green-900 mb-3">API Specification</h3>
+              <h3 className="text-xl font-semibold text-green-900 mb-3">API Specification (v0)</h3>
               <p className="text-green-700 mb-4">
                 View the complete OpenAPI 3.1.0 specification for the MCP Server Registry API with all endpoints and schemas.
               </p>
@@ -37,8 +50,44 @@ export default function Home() {
                 href="/v0/openapi.yaml"
                 className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
               >
-                OpenAPI Spec
+                OpenAPI Spec v0
               </Link>
+            </div>
+
+            <div className="bg-indigo-50 rounded-xl p-6">
+              <h3 className="text-xl font-semibold text-indigo-900 mb-3">API Specification (v0.1)</h3>
+              <p className="text-indigo-700 mb-4">
+                View the latest OpenAPI specification from the official MCP registry with enhanced version support and new features.
+              </p>
+              <Link
+                href="/v0.1/openapi.yaml"
+                className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                OpenAPI Spec v0.1
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-6 mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">OpenAPI v0.1 Endpoints (New!)</h3>
+            <div className="grid md:grid-cols-3 gap-4 text-sm mb-4">
+              <div className="bg-white rounded-lg p-4">
+                <code className="text-purple-600 font-mono text-xs">GET /v0.1/servers</code>
+                <p className="text-gray-600 mt-1">List servers with search & filters</p>
+              </div>
+              <div className="bg-white rounded-lg p-4">
+                <code className="text-purple-600 font-mono text-xs">GET /v0.1/servers/&#123;name&#125;/versions</code>
+                <p className="text-gray-600 mt-1">List all versions</p>
+              </div>
+              <div className="bg-white rounded-lg p-4">
+                <code className="text-purple-600 font-mono text-xs">GET /v0.1/servers/&#123;name&#125;/versions/&#123;ver&#125;</code>
+                <p className="text-gray-600 mt-1">Get specific version</p>
+              </div>
+            </div>
+            <div className="mt-4 p-4 bg-purple-50 rounded-lg">
+              <p className="text-purple-800 text-sm">
+                <strong>New Features:</strong> Multiple versions per server, enhanced search, version filtering, and camelCase field naming.
+              </p>
             </div>
           </div>
 

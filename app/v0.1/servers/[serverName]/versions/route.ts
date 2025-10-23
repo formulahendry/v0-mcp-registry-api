@@ -3,7 +3,7 @@ import { ServerServiceV01 } from "../../../../../src/services/serverServiceV01"
 
 // GET /v0.1/servers/{serverName}/versions - List all versions of an MCP server
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ serverName: string }> }
 ) {
   try {
