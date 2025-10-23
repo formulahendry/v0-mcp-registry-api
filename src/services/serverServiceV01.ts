@@ -205,11 +205,11 @@ const generateMockServers = (): Map<string, ServerResponse[]> => {
     // Only generate versions if this server hasn't been created yet
     if (!serverMap.has(fullServerName)) {
       const versions: ServerResponse[] = []
-      const numVersions = Math.floor(Math.random() * 3) + 1 // 1-3 versions per server
+      // Generate 2-5 versions per server to ensure we have non-latest versions
+      const numVersions = Math.floor(Math.random() * 4) + 2
       
       for (let v = 0; v < numVersions; v++) {
         const version = `${v + 1}.${Math.floor(Math.random() * 5)}.${Math.floor(Math.random() * 10)}`
-        const isLatest = v === numVersions - 1
         
         const baseDate = new Date("2024-01-01")
         const randomDays = Math.floor(Math.random() * 300) + (v * 30)
@@ -276,7 +276,7 @@ const generateMockServers = (): Map<string, ServerResponse[]> => {
               status: "active",
               publishedAt: publishedDate.toISOString(),
               updatedAt: updatedDate.toISOString(),
-              isLatest,
+              isLatest: false, // Will be set after sorting
             }
           }
         }
@@ -290,6 +290,11 @@ const generateMockServers = (): Map<string, ServerResponse[]> => {
         const dateB = new Date(b._meta["io.modelcontextprotocol.registry/official"]?.publishedAt || 0)
         return dateB.getTime() - dateA.getTime()
       })
+
+      // Mark the first version (newest) as latest
+      if (versions.length > 0) {
+        versions[0]._meta["io.modelcontextprotocol.registry/official"]!.isLatest = true
+      }
 
       serverMap.set(fullServerName, versions)
     }
@@ -328,9 +333,8 @@ export class ServerServiceV01 {
           if (specific) allServers.push(specific)
         }
       } else {
-        // By default, return latest version only
-        const latest = versions.find(v => v._meta["io.modelcontextprotocol.registry/official"]?.isLatest)
-        if (latest) allServers.push(latest)
+        // By default (no version filter), return ALL versions
+        allServers.push(...versions)
       }
     }
 
