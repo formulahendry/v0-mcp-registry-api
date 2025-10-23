@@ -79,7 +79,16 @@ interface ServerList {
 }
 
 export default function RegistryBrowser() {
-  const [baseUrl, setBaseUrl] = useState("http://localhost:3000/v0.1")
+  // Get the base URL dynamically from the current window location
+  const getDefaultBaseUrl = () => {
+    if (typeof window !== 'undefined') {
+      const { protocol, host } = window.location
+      return `${protocol}//${host}/v0.1`
+    }
+    return '/v0.1' // Fallback for SSR
+  }
+
+  const [baseUrl, setBaseUrl] = useState(getDefaultBaseUrl())
   const [customUrl, setCustomUrl] = useState("")
   const [searchKeyword, setSearchKeyword] = useState("")
   const [latestOnly, setLatestOnly] = useState(true)
@@ -236,7 +245,7 @@ export default function RegistryBrowser() {
               <Label htmlFor="custom-url">Registry Base URL</Label>
               <Input
                 id="custom-url"
-                placeholder="http://localhost:3000/v0.1"
+                placeholder="Enter custom registry URL (e.g., https://example.com/v0.1)"
                 value={customUrl}
                 onChange={(e) => setCustomUrl((e.target as HTMLInputElement).value)}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === "Enter" && applyCustomUrl()}
