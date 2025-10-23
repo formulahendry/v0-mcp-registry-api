@@ -481,7 +481,7 @@ export default function RegistryBrowser() {
 
       {/* Server Details Dialog */}
       <Dialog open={!!selectedServer} onOpenChange={() => setSelectedServer(null)}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-5xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {selectedServer?.server.title || selectedServer?.server.name.split("/")[1]}
