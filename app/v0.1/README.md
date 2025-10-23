@@ -92,5 +92,5 @@ The original `/v0/servers` endpoints remain unchanged and continue to work with 
 - `app/v0.1/servers/[serverName]/versions/[version]/route.ts` - Get specific version endpoint
 - `app/v0.1/publish/route.ts` - Publish server endpoint
 - `app/v0.1/openapi.yaml/route.ts` - OpenAPI spec endpoint
-- `src/services/serverServiceV01.ts` - Service layer for v0.1 API
+- `src/services/serverServiceV01.ts` - Service layer for v0.1 API (150+ mock servers)
 - `src/types/v0.1.ts` - TypeScript types for v0.1 API

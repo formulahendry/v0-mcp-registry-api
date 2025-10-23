@@ -108,19 +108,20 @@ GET http://localhost:3000/v0/servers?limit=10
 
 ## Mock Data
 
-The service generates 10 mock servers with 1-3 versions each:
+The service generates 150 mock servers with 1-3 versions each, including servers like:
 - `io.modelcontextprotocol/filesystem`
 - `io.modelcontextprotocol/database`
 - `io.modelcontextprotocol/web-scraper`
 - `io.modelcontextprotocol/email`
-- `io.modelcontextprotocol/calendar`
-- `io.modelcontextprotocol/slack`
 - `io.modelcontextprotocol/github`
-- `io.modelcontextprotocol/brave-search`
-- `io.modelcontextprotocol/weather-api`
-- `com.example/demo-server`
+- `io.modelcontextprotocol/slack`
+- `io.modelcontextprotocol/docker`
+- `io.modelcontextprotocol/kubernetes`
+- `io.modelcontextprotocol/openai`
+- `io.modelcontextprotocol/anthropic`
+- ... and many more (150+ total servers)
 
-Each server includes realistic metadata like repository info, packages, icons, and version history.
+Each server includes realistic metadata like repository info, packages, icons (for some servers), and version history.
 
 ## Next Steps
 

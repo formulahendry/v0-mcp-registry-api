@@ -15,16 +15,170 @@ const generateMockServers = (): Map<string, ServerResponse[]> => {
   const serverMap = new Map<string, ServerResponse[]>()
   
   const serverNames = [
-    "io.modelcontextprotocol/filesystem",
-    "io.modelcontextprotocol/database",
-    "io.modelcontextprotocol/web-scraper",
-    "io.modelcontextprotocol/email",
-    "io.modelcontextprotocol/calendar",
-    "io.modelcontextprotocol/slack",
-    "io.modelcontextprotocol/github",
-    "io.modelcontextprotocol/brave-search",
-    "io.modelcontextprotocol/weather-api",
-    "com.example/demo-server",
+    "filesystem",
+    "database",
+    "web-scraper",
+    "email",
+    "calendar",
+    "slack",
+    "github",
+    "jira",
+    "notion",
+    "trello",
+    "discord",
+    "telegram",
+    "twitter",
+    "reddit",
+    "youtube",
+    "spotify",
+    "aws-s3",
+    "gcp-storage",
+    "azure-blob",
+    "mongodb",
+    "postgresql",
+    "mysql",
+    "redis",
+    "elasticsearch",
+    "kafka",
+    "rabbitmq",
+    "docker",
+    "kubernetes",
+    "terraform",
+    "ansible",
+    "jenkins",
+    "gitlab",
+    "bitbucket",
+    "confluence",
+    "sharepoint",
+    "dropbox",
+    "google-drive",
+    "onedrive",
+    "box",
+    "figma",
+    "sketch",
+    "adobe-creative",
+    "canva",
+    "miro",
+    "lucidchart",
+    "salesforce",
+    "hubspot",
+    "zendesk",
+    "intercom",
+    "freshdesk",
+    "servicenow",
+    "workday",
+    "bamboohr",
+    "greenhouse",
+    "lever",
+    "stripe",
+    "paypal",
+    "square",
+    "quickbooks",
+    "xero",
+    "freshbooks",
+    "wave",
+    "mint",
+    "ynab",
+    "personal-capital",
+    "robinhood",
+    "coinbase",
+    "binance",
+    "kraken",
+    "gemini",
+    "blockfi",
+    "celsius",
+    "nexo",
+    "weather-api",
+    "maps",
+    "translation",
+    "ocr",
+    "speech-to-text",
+    "text-to-speech",
+    "image-recognition",
+    "sentiment-analysis",
+    "chatgpt",
+    "claude",
+    "gemini-ai",
+    "llama",
+    "stable-diffusion",
+    "midjourney",
+    "dall-e",
+    "runway",
+    "luma",
+    "suno",
+    "elevenlabs",
+    "replicate",
+    "huggingface",
+    "openai",
+    "anthropic",
+    "cohere",
+    "together-ai",
+    "perplexity",
+    "you-com",
+    "brave-search",
+    "duckduckgo",
+    "bing",
+    "google-search",
+    "wikipedia",
+    "wolfram-alpha",
+    "arxiv",
+    "pubmed",
+    "semantic-scholar",
+    "jstor",
+    "coursera",
+    "udemy",
+    "khan-academy",
+    "duolingo",
+    "anki",
+    "quizlet",
+    "grammarly",
+    "hemingway",
+    "notion-ai",
+    "obsidian",
+    "roam-research",
+    "logseq",
+    "remnote",
+    "todoist",
+    "any-do",
+    "ticktick",
+    "things",
+    "omnifocus",
+    "asana",
+    "monday",
+    "clickup",
+    "linear",
+    "height",
+    "shortcut",
+    "pivotal-tracker",
+    "azure-devops",
+    "circleci",
+    "travis-ci",
+    "github-actions",
+    "gitlab-ci",
+    "buildkite",
+    "teamcity",
+    "octopus-deploy",
+    "spinnaker",
+    "argo-cd",
+    "flux",
+    "helm",
+    "kustomize",
+    "istio",
+    "linkerd",
+    "consul",
+    "vault",
+    "nomad",
+    "packer",
+    "vagrant",
+    "virtualbox",
+    "vmware",
+    "proxmox",
+    "xen",
+    "kvm",
+    "qemu",
+    "parallels",
+    "utm",
+    "lima",
   ]
 
   const descriptions = [
@@ -33,98 +187,112 @@ const generateMockServers = (): Map<string, ServerResponse[]> => {
     "Advanced automation capabilities for streamlined operations",
     "Real-time data synchronization and collaboration features",
     "Secure and scalable solution for enterprise environments",
+    "User-friendly interface with comprehensive API support",
+    "High-performance processing with minimal resource usage",
+    "Cross-platform compatibility with extensive plugin ecosystem",
+    "AI-powered insights and intelligent data processing",
+    "Robust security features with enterprise-grade encryption",
   ]
 
-  serverNames.forEach((serverName, idx) => {
-    const versions: ServerResponse[] = []
-    const numVersions = Math.floor(Math.random() * 3) + 1 // 1-3 versions per server
+  // Generate 150 servers
+  Array.from({ length: 150 }, (_, index) => {
+    const name = serverNames[index % serverNames.length]
+    const description = descriptions[Math.floor(Math.random() * descriptions.length)]
     
-    for (let v = 0; v < numVersions; v++) {
-      const version = `${v + 1}.${Math.floor(Math.random() * 5)}.${Math.floor(Math.random() * 10)}`
-      const isLatest = v === numVersions - 1
+    // Create full server name with suffix if needed to make it unique
+    const fullServerName = `io.modelcontextprotocol/${name}${index >= serverNames.length ? `-${Math.floor(index / serverNames.length)}` : ""}`
+    
+    // Only generate versions if this server hasn't been created yet
+    if (!serverMap.has(fullServerName)) {
+      const versions: ServerResponse[] = []
+      const numVersions = Math.floor(Math.random() * 3) + 1 // 1-3 versions per server
       
-      const baseDate = new Date("2024-01-01")
-      const randomDays = Math.floor(Math.random() * 300) + (v * 30)
-      const publishedDate = new Date(baseDate.getTime() + randomDays * 24 * 60 * 60 * 1000)
-      const updatedDate = new Date(publishedDate.getTime() + Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000)
+      for (let v = 0; v < numVersions; v++) {
+        const version = `${v + 1}.${Math.floor(Math.random() * 5)}.${Math.floor(Math.random() * 10)}`
+        const isLatest = v === numVersions - 1
+        
+        const baseDate = new Date("2024-01-01")
+        const randomDays = Math.floor(Math.random() * 300) + (v * 30)
+        const publishedDate = new Date(baseDate.getTime() + randomDays * 24 * 60 * 60 * 1000)
+        const updatedDate = new Date(publishedDate.getTime() + Math.floor(Math.random() * 10) * 24 * 60 * 60 * 1000)
 
-      const description = descriptions[Math.floor(Math.random() * descriptions.length)]
-      const shortName = serverName.split('/')[1]
-      
-      const server: ServerDetail = {
-        name: serverName,
-        description: `${description} - ${shortName} integration for MCP.`,
-        version,
-        title: shortName.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-        repository: {
-          url: `https://github.com/modelcontextprotocol/servers`,
-          source: "github",
-          id: generateServerIdFromName(`repo-${serverName}`),
-          ...(idx % 3 === 0 ? { subfolder: `src/${shortName}` } : {}),
-        },
-        ...(idx % 2 === 0 ? { websiteUrl: `https://modelcontextprotocol.io/${shortName}` } : {}),
-        ...(idx % 3 === 0 ? {
-          icons: [
+        const shortName = name
+        
+        const server: ServerDetail = {
+          name: fullServerName,
+          description: `${description} - ${shortName} integration for MCP.`,
+          version,
+          title: shortName.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+          repository: {
+            url: `https://github.com/modelcontextprotocol/servers`,
+            source: "github",
+            id: generateServerIdFromName(`repo-${fullServerName}`),
+            ...(index % 3 === 0 ? { subfolder: `src/${shortName}` } : {}),
+          },
+          ...(index % 2 === 0 ? { websiteUrl: `https://modelcontextprotocol.io/${shortName}` } : {}),
+          ...(index % 3 === 0 ? {
+            icons: [
+              {
+                src: `https://example.com/icons/${shortName}.png`,
+                mimeType: "image/png" as const,
+                sizes: ["48x48", "96x96"],
+              }
+            ]
+          } : {}),
+          $schema: "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+          packages: [
             {
-              src: `https://example.com/icons/${shortName}.png`,
-              mimeType: "image/png" as const,
-              sizes: ["48x48", "96x96"],
+              registryType: "npm",
+              registryBaseUrl: "https://registry.npmjs.org",
+              identifier: `@modelcontextprotocol/server-${shortName}`,
+              version,
+              transport: { type: "stdio" },
             }
-          ]
-        } : {}),
-        $schema: "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-        packages: [
-          {
-            registryType: "npm",
-            registryBaseUrl: "https://registry.npmjs.org",
-            identifier: `@modelcontextprotocol/server-${shortName}`,
-            version,
-            transport: { type: "stdio" },
-          }
-        ],
-        ...(idx % 2 === 0 ? {
-          remotes: [
-            {
-              type: "sse" as const,
-              url: `https://api.${shortName}.example.com/sse`,
-            }
-          ]
-        } : {}),
-        _meta: {
-          "io.modelcontextprotocol.registry/publisher-provided": {
-            tool: "publisher-cli",
-            version: "1.2.3",
-            buildInfo: {
-              commit: "abc123def456",
-              timestamp: updatedDate.toISOString(),
+          ],
+          ...(index % 2 === 0 ? {
+            remotes: [
+              {
+                type: "sse" as const,
+                url: `https://api.${shortName}.example.com/sse`,
+              }
+            ]
+          } : {}),
+          _meta: {
+            "io.modelcontextprotocol.registry/publisher-provided": {
+              tool: "publisher-cli",
+              version: "1.2.3",
+              buildInfo: {
+                commit: "abc123def456",
+                timestamp: updatedDate.toISOString(),
+              }
             }
           }
         }
-      }
 
-      const response: ServerResponse = {
-        server,
-        _meta: {
-          "io.modelcontextprotocol.registry/official": {
-            status: "active",
-            publishedAt: publishedDate.toISOString(),
-            updatedAt: updatedDate.toISOString(),
-            isLatest,
+        const response: ServerResponse = {
+          server,
+          _meta: {
+            "io.modelcontextprotocol.registry/official": {
+              status: "active",
+              publishedAt: publishedDate.toISOString(),
+              updatedAt: updatedDate.toISOString(),
+              isLatest,
+            }
           }
         }
+
+        versions.push(response)
       }
 
-      versions.push(response)
+      // Sort versions by published date (newest first)
+      versions.sort((a, b) => {
+        const dateA = new Date(a._meta["io.modelcontextprotocol.registry/official"]?.publishedAt || 0)
+        const dateB = new Date(b._meta["io.modelcontextprotocol.registry/official"]?.publishedAt || 0)
+        return dateB.getTime() - dateA.getTime()
+      })
+
+      serverMap.set(fullServerName, versions)
     }
-
-    // Sort versions by published date (newest first)
-    versions.sort((a, b) => {
-      const dateA = new Date(a._meta["io.modelcontextprotocol.registry/official"]?.publishedAt || 0)
-      const dateB = new Date(b._meta["io.modelcontextprotocol.registry/official"]?.publishedAt || 0)
-      return dateB.getTime() - dateA.getTime()
-    })
-
-    serverMap.set(serverName, versions)
   })
 
   return serverMap
