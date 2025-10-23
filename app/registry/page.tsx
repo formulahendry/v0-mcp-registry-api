@@ -383,7 +383,7 @@ export default function RegistryBrowser() {
               <CardHeader className="cursor-pointer" onClick={() => toggleServerExpansion(server.name)}>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <CardTitle className="text-xl truncate">
                         {server.title || server.name.split("/")[1]}
                       </CardTitle>
@@ -393,6 +393,18 @@ export default function RegistryBrowser() {
                       <Badge variant="outline" className="shrink-0">v{server.version}</Badge>
                       {metadata?.status === "deprecated" && (
                         <Badge variant="destructive" className="shrink-0">Deprecated</Badge>
+                      )}
+                      {/* Show remote types */}
+                      {server.remotes && server.remotes.length > 0 && (
+                        <Badge variant="secondary" className="shrink-0 text-xs">
+                          {[...new Set(server.remotes.map((r: any) => r.type))].join(', ')}
+                        </Badge>
+                      )}
+                      {/* Show package registry types */}
+                      {server.packages && server.packages.length > 0 && (
+                        <Badge variant="secondary" className="shrink-0 text-xs">
+                          {[...new Set(server.packages.map(p => p.registryType))].join(', ')}
+                        </Badge>
                       )}
                     </div>
                     <CardDescription className="text-sm mb-2">
@@ -487,6 +499,33 @@ export default function RegistryBrowser() {
                               <p className="text-xs text-muted-foreground">
                                 Transport: {pkg.transport.type}
                               </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Remotes */}
+                    {server.remotes && server.remotes.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2 text-sm">Remote Endpoints</h4>
+                        <div className="space-y-2">
+                          {server.remotes.map((remote: any, idx: number) => (
+                            <div key={idx} className="bg-muted p-3 rounded-md text-sm">
+                              <div className="flex items-center justify-between mb-1">
+                                <a
+                                  href={remote.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline flex items-center gap-1 text-xs font-mono"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {remote.url} <ExternalLink className="h-3 w-3" />
+                                </a>
+                                <Badge variant="outline" className="text-xs shrink-0 ml-2">
+                                  {remote.type}
+                                </Badge>
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -668,8 +707,15 @@ export default function RegistryBrowser() {
                     {selectedServer.server.remotes.map((remote: any, idx: number) => (
                       <div key={idx} className="bg-muted p-3 rounded-md">
                         <div className="flex items-center justify-between mb-1">
-                          <code className="text-sm font-mono">{remote.url}</code>
-                          <Badge variant="outline" className="text-xs">
+                          <a
+                            href={remote.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline flex items-center gap-1 text-sm font-mono"
+                          >
+                            {remote.url} <ExternalLink className="h-3 w-3" />
+                          </a>
+                          <Badge variant="outline" className="text-xs shrink-0 ml-2">
                             {remote.type}
                           </Badge>
                         </div>
