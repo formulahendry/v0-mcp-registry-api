@@ -96,34 +96,81 @@ export default function RegistryBrowser() {
     setError(null)
 
     try {
-      const url = new URL(`${baseUrl}/servers`)
-      url.searchParams.set("limit", "30")
-      if (searchKeyword) {
-        url.searchParams.set("search", searchKeyword)
-      }
-      if (latestOnly) {
-        url.searchParams.set("version", "latest")
-      }
-      if (cursor) {
-        url.searchParams.set("cursor", cursor)
-      }
-
-      const response = await fetch(url.toString())
+      // Determine if we're calling the local API or an external one
+      const isLocalApi = baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1")
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch servers: ${response.statusText}`)
-      }
+      if (isLocalApi) {
+        // Direct call for local API
+        const url = new URL(`${baseUrl}/servers`)
+        url.searchParams.set("limit", "30")
+        if (searchKeyword) {
+          url.searchParams.set("search", searchKeyword)
+        }
+        if (latestOnly) {
+          url.searchParams.set("version", "latest")
+        }
+        if (cursor) {
+          url.searchParams.set("cursor", cursor)
+        }
 
-      const data = await response.json() as ServerList
-      
-      if (append) {
-        setServers((prev) => [...prev, ...data.servers])
+        const response = await fetch(url.toString())
+        
+        if (!response.ok) {
+          throw new Error(`Failed to fetch servers: ${response.statusText}`)
+        }
+
+        const data = await response.json() as ServerList
+        
+        if (append) {
+          setServers((prev) => [...prev, ...data.servers])
+        } else {
+          setServers(data.servers)
+        }
+        
+        setCurrentCursor(data.metadata?.nextCursor)
+        setHasMore(!!data.metadata?.nextCursor)
       } else {
-        setServers(data.servers)
+        // Use proxy for external APIs to avoid CORS issues
+        const params: Record<string, string> = {
+          limit: "30",
+        }
+        if (searchKeyword) {
+          params.search = searchKeyword
+        }
+        if (latestOnly) {
+          params.version = "latest"
+        }
+        if (cursor) {
+          params.cursor = cursor
+        }
+
+        const response = await fetch("/api/proxy/servers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            baseUrl,
+            params,
+          }),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || `Failed to fetch servers: ${response.statusText}`)
+        }
+
+        const data = await response.json() as ServerList
+        
+        if (append) {
+          setServers((prev) => [...prev, ...data.servers])
+        } else {
+          setServers(data.servers)
+        }
+        
+        setCurrentCursor(data.metadata?.nextCursor)
+        setHasMore(!!data.metadata?.nextCursor)
       }
-      
-      setCurrentCursor(data.metadata?.nextCursor)
-      setHasMore(!!data.metadata?.nextCursor)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")
       setServers([])
@@ -201,6 +248,11 @@ export default function RegistryBrowser() {
           </div>
           <div className="text-sm text-muted-foreground">
             Current endpoint: <code className="bg-muted px-1 py-0.5 rounded">{baseUrl}</code>
+            {!baseUrl.includes("localhost") && !baseUrl.includes("127.0.0.1") && (
+              <span className="ml-2 text-xs">
+                (via proxy to avoid CORS issues)
+              </span>
+            )}
           </div>
         </CardContent>
       </Card>
