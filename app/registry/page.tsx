@@ -267,6 +267,9 @@ export default function RegistryBrowser() {
               <option value="http://registry.modelcontextprotocol.io/v0.1">
                 OSS MCP Registry (registry.modelcontextprotocol.io)
               </option>
+              <option value="https://registry.mcp.azure.com/v0.1">
+                Azure MCP Registry (registry.mcp.azure.com)
+              </option>
               <option value={getDefaultBaseUrl()}>
                 Local Registry (Current Host)
               </option>
